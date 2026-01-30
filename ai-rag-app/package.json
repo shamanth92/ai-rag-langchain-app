@@ -19,7 +19,8 @@
     "openai": "^6.16.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-hook-form": "^7.71.1"
+    "react-hook-form": "^7.71.1",
+    "react-loader-spinner": "^8.0.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

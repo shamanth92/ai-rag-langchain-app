@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Hourglass } from "react-loader-spinner";
 
 export default function LangChainRagPage() {
   const [ragResponse, setRagResponse] = useState("");
+  const [showSpinner, setShowSpinner] = useState(false);
   type FormData = {
     prompt: string;
   };
@@ -16,12 +18,15 @@ export default function LangChainRagPage() {
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
+    setShowSpinner(true);
+    setRagResponse("");
     const res = await fetch(`/langChainRagApi`, {
       method: "POST",
       body: JSON.stringify({ question: data.prompt }),
     });
     const answerRag = await res.json();
     setRagResponse(answerRag.answer);
+    setShowSpinner(false);
   };
 
   return (
@@ -47,9 +52,24 @@ export default function LangChainRagPage() {
             </button>
           </div>
         </form>
-        <div className="mt-10 border-2 p-3 rounded-md border-blue-800">
-          <p className="text-blue-800 font-sans">RAG Response: {ragResponse}</p>
-        </div>
+        {showSpinner && ragResponse === "" && (
+          <Hourglass
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="hourglass-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            colors={["#306cce", "#72a1ed"]}
+          />
+        )}
+        {!showSpinner && ragResponse !== "" && (
+          <div className="mt-10 border-2 p-3 rounded-md border-blue-800">
+            <p className="text-blue-800 font-sans">
+              RAG Response: {ragResponse}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

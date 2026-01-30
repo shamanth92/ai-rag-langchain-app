@@ -14,7 +14,8 @@
     "@browserbasehq/stagehand": false
   },
   "devDependencies": {
-    "@types/node": "^25.0.9"
+    "@types/node": "^25.0.9",
+    "tsx": "^4.21.0"
   },
   "dependencies": {
     "@langchain/classic": "^1.0.11",
