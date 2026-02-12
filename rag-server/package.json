@@ -24,6 +24,9 @@
     "@langchain/openai": "^1.2.3",
     "chromadb": "^3.2.2",
     "langchain": "^1.2.14",
-    "openai": "^6.16.0"
+    "officeparser": "^6.0.4",
+    "openai": "^6.16.0",
+    "pdf-parse": "^1.1.4",
+    "unstructured-client": "^0.30.3"
   }
 }
