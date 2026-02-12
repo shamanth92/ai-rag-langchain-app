@@ -1,6 +1,13 @@
 import Link from "next/link";
+import FeaturesComponent from "./components/features";
 
 export default function Home() {
+  const FEATURES: Array<{ title: string; link: string }> = [
+    { title: "Basic RAG Page", link: "/basicRag" },
+    { title: "LangChain RAG Page", link: "/langChainRag" },
+    { title: "K8s Study Buddy", link: "/studyBuddy" },
+  ];
+
   return (
     <div className="h-screen">
       <div className="flex justify-center font-sans h-20 bg-blue-800 text-white items-center">
@@ -22,18 +29,13 @@ export default function Home() {
           <p className="text-sm text-white">
             Click on each to explore the RAG capabilities.
           </p>
-          <button className="m-4 p-4 bg-sky-500 text-white rounded-md cursor-pointer">
-            <Link href="/basicRag">Basic RAG Page</Link>
-          </button>
-          <button className="m-4 p-4 bg-sky-500 text-white rounded-md cursor-pointer">
-            <Link href="/langChainRag">LangChain RAG Page</Link>
-          </button>
-          <button className="m-4 p-4 bg-sky-500 text-white rounded-md cursor-pointer">
-            <Link href="/studyBuddy">Study Buddy</Link>
-          </button>
-          <button className="m-4 p-4 bg-sky-500 text-white rounded-md cursor-pointer">
-            <Link href="/travelPlanner">Travel Planner</Link>
-          </button>
+          {FEATURES.map((feature) => (
+            <FeaturesComponent
+              title={feature.title}
+              link={feature.link}
+              key={feature.link}
+            />
+          ))}
         </div>
       </div>
     </div>
