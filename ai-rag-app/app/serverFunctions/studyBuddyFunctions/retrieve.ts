@@ -14,6 +14,7 @@ const supabaseClient = createClient(
 const vectorStore = new SupabaseVectorStore(embeddings, {
   client: supabaseClient,
   tableName: process.env.TABLE_NAME!,
+  queryName: "match_studykubernetes",
 });
 
 // Function to get retriever filtered by week

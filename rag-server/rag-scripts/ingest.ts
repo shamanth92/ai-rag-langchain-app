@@ -1,8 +1,9 @@
+import "dotenv/config";
 import path from "path";
 import { readDocuments } from "./setup/readDocs.ts";
 import { chunkText } from "./setup/chunk.ts";
 import { embedTexts } from "./setup/embedding.ts";
-import { storeEmbeddings } from "./setup/chromaVector.ts";
+import { storeEmbeddings } from "./setup/supabaseVector.ts";
 
 async function ingest() {
   const docsPath = path.join(process.cwd(), "data/docs");
@@ -25,7 +26,7 @@ async function ingest() {
   const embeddings = await embedTexts(allChunks);
 
   await storeEmbeddings({
-    collectionName: "phase2-rag",
+    tableName: process.env.TABLE_NAME_BASIC!,
     embeddings,
     documents: allChunks,
     metadatas,

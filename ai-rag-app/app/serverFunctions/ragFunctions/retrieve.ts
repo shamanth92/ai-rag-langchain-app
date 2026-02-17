@@ -1,23 +1,20 @@
-import { ChromaClient } from "chromadb";
+import { createClient } from "@supabase/supabase-js";
 
-const chroma = new ChromaClient({
-  host: "localhost",
-  port: 8000,
-});
+const supabase = createClient(
+  process.env.SUPABASE_DATABASE_URL!,
+  process.env.SUPABASE_SERVICE_KEY!,
+);
 
-export async function retrieveChunks(
-  queryEmbedding: number[],
-  topK = 4
-) {
-  const collection = await chroma.getCollection({
-    name: "phase2-rag",
-    // embeddingFunction: null, // IMPORTANT
+export async function retrieveChunks(queryEmbedding: number[], topK = 4) {
+  const { data, error } = await supabase.rpc("match_basicrag", {
+    query_embedding: queryEmbedding,
+    match_count: topK,
   });
 
-  const results = await collection.query({
-    queryEmbeddings: [queryEmbedding],
-    nResults: topK,
-  });
+  if (error) {
+    console.error("Supabase retrieval error:", error);
+    return [];
+  }
 
-  return results.documents?.[0] || [];
+  return data?.map((row: any) => row.content) || [];
 }
