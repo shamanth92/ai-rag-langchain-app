@@ -1,13 +1,19 @@
 import { OpenAIEmbeddings } from "@langchain/openai";
-import { Chroma } from "@langchain/community/vectorstores/chroma";
+import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
+import { createClient } from "@supabase/supabase-js";
 
 const embeddings = new OpenAIEmbeddings({
   model: "text-embedding-3-small",
 });
 
-const vectorStore = await Chroma.fromExistingCollection(embeddings, {
-  collectionName: "study-buddy-k8s",
-  url: "http://localhost:8000",
+const supabaseClient = createClient(
+  process.env.SUPABASE_DATABASE_URL!,
+  process.env.SUPABASE_SERVICE_KEY!,
+);
+
+const vectorStore = new SupabaseVectorStore(embeddings, {
+  client: supabaseClient,
+  tableName: process.env.TABLE_NAME!,
 });
 
 // Function to get retriever filtered by week
