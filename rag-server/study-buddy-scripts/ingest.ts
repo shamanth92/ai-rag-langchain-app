@@ -1,9 +1,11 @@
+import "dotenv/config";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import path from "path";
 import fs from "fs";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { OpenAIEmbeddings } from "@langchain/openai";
-import { Chroma } from "@langchain/community/vectorstores/chroma";
+import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
+import { createClient } from "@supabase/supabase-js";
 
 const weeksPath = path.join(process.cwd(), "data/weeks");
 
@@ -25,15 +27,13 @@ for (const weekFolder of weekFolders) {
 
     // Add week metadata to each document
     docs.forEach((doc) => {
-      doc.metadata.week = weekFolder; // e.g., "week1", "week2"
+      doc.metadata.week = weekFolder;
       doc.metadata.fileName = pdfFile;
     });
 
     allDocuments.push(...docs);
   }
 }
-
-console.log("allDocuments: ", allDocuments);
 
 const splitter = new RecursiveCharacterTextSplitter({
   chunkOverlap: 200,
@@ -55,9 +55,14 @@ const embeddings = new OpenAIEmbeddings({
   model: "text-embedding-3-small",
 });
 
-await Chroma.fromDocuments(cleanedChunks, embeddings, {
-  collectionName: "study-buddy-k8s",
-  url: "http://localhost:8000",
+const supabaseClient = createClient(
+  process.env.SUPABASE_DATABASE_URL!,
+  process.env.SUPABASE_SERVICE_KEY!,
+);
+
+await SupabaseVectorStore.fromDocuments(cleanedChunks, embeddings, {
+  client: supabaseClient,
+  tableName: process.env.TABLE_NAME!,
 });
 
 console.log(
