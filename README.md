@@ -126,6 +126,8 @@ Final Answer
 
 **Project Demo**
 
+[![AI RAG Study Buddy Demo](ai-rag-app/public/Thumbnail.png)](https://youtu.be/xqMbjzXfXls)
+
 **Documentation for K8s Ingestion** - https://kubernetes.io/docs/concepts/
 
 
